@@ -3,10 +3,12 @@ import time
 from datetime import datetime
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_REPO = "yourusername/your-repo-name"  # Replace this
+GITHUB_REPO = "yourusername/your-repo-name"  # change this
 REPO_DIR = "./repo"
 
 def clone_repo():
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Directory listing before clone: {os.listdir('.')}")
     if not os.path.exists(REPO_DIR):
         print("Cloning repo...")
         ret = os.system(f"git clone https://{GITHUB_TOKEN}@github.com/{GITHUB_REPO}.git {REPO_DIR}")
@@ -15,6 +17,7 @@ def clone_repo():
             exit(1)
     else:
         print("Repo already cloned.")
+    print(f"Directory listing after clone: {os.listdir('.')}")
 
 def setup_git_user():
     os.chdir(REPO_DIR)
