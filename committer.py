@@ -2,43 +2,30 @@ import os
 import time
 from datetime import datetime
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_REPO = "yourusername/your-repo-name"  # change this
-REPO_DIR = "./repo"
+GITHUB_USERNAME = "workspacereddy"
+REPO_NAME = "commits"
+GITHUB_TOKEN = os.environ['GITHUB_TOKEN']  # Store this in Replit Secrets
+REMOTE = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_USERNAME}/{REPO_NAME}.git"
 
-def clone_repo():
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Directory listing before clone: {os.listdir('.')}")
-    if os.path.exists(REPO_DIR):
-        print(f"Is '{REPO_DIR}' a directory? {os.path.isdir(REPO_DIR)}")
-        print(f"Is '{REPO_DIR}' a file? {os.path.isfile(REPO_DIR)}")
-    if not os.path.exists(REPO_DIR):
-        print("Cloning repo...")
-        ret = os.system(f"git clone https://{GITHUB_TOKEN}@github.com/{GITHUB_REPO}.git {REPO_DIR}")
-        if ret != 0:
-            print(f"Failed to clone repo with exit code {ret}")
-            exit(1)
-    else:
-        print("Repo already cloned.")
-    print(f"Directory listing after clone: {os.listdir('.')}")
+def setup_git():
+    os.system("git init")
+    os.system(f"git remote add origin {REMOTE}")
+    os.system("git config user.name 'workspacereddy'")
+    os.system("git config user.email 'workspacereddy@gmail.com'")
 
-def setup_git_user():
-    os.chdir(REPO_DIR)
-    os.system('git config user.email "your-email@example.com"')
-    os.system('git config user.name "Your Name"')
+def make_commit():
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("log.txt", "a") as f:
+        f.write(f"Logged at {now}\n")
+    
+    os.system("git add .")
+    os.system(f"git commit -m 'Update: {now}'")
+    os.system("git push origin master")
 
-def make_dummy_commit():
-    os.chdir(REPO_DIR)
-    with open("dummy.txt", "a") as f:
-        f.write(f"Auto commit at {datetime.now()}\n")
-    os.system("git add dummy.txt")
-    os.system(f'git commit -m "Auto commit at {datetime.now()}"')
-    os.system("git push origin main")
+if not os.path.isdir(".git"):
+    setup_git()
 
-if __name__ == "__main__":
-    clone_repo()
-    setup_git_user()
-
-    while True:
-        make_dummy_commit()
-        time.sleep(3600)
+while True:
+    make_commit()
+    print("Committed successfully, sleeping for 1 hour...")
+    time.sleep(3600)
