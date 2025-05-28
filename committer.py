@@ -4,7 +4,7 @@ from datetime import datetime
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # Replace this with your real GitHub token
 GITHUB_REPO = "workspacereddy/commits"
-REPO_DIR = "/app/repo"
+REPO_DIR = "./repo"
 
 def clone_repo():
     if not os.path.exists(REPO_DIR):
