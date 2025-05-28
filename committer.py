@@ -1,31 +1,28 @@
 import os
-import time
-from datetime import datetime
+import datetime
+import subprocess
 
-GITHUB_USERNAME = "workspacereddy"
-REPO_NAME = "commits"
-GITHUB_TOKEN = os.environ['GITHUB_TOKEN']  # Store this in Replit Secrets
-REMOTE = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_USERNAME}/{REPO_NAME}.git"
-
-def setup_git():
-    os.system("git init")
-    os.system(f"git remote add origin {REMOTE}")
-    os.system("git config user.name 'workspacereddy'")
-    os.system("git config user.email 'workspacereddy@gmail.com'")
+# === SET THESE ===
+GIT_NAME = "workspacereddy"
+GIT_EMAIL = "workspacereddy@gmail.com"
+REPO_DIR = "/home/your_pythonanywhere_username/daily-logger"
+BRANCH = "main"  # Or "master" if that's your default branch
 
 def make_commit():
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    os.chdir(REPO_DIR)
+
+    # Set user config so GitHub recognizes you
+    subprocess.run(["git", "config", "user.name", GIT_NAME])
+    subprocess.run(["git", "config", "user.email", GIT_EMAIL])
+
+    # Create/update log file
     with open("log.txt", "a") as f:
-        f.write(f"Logged at {now}\n")
-    
-    os.system("git add .")
-    os.system(f"git commit -m 'Update: {now}'")
-    os.system("git push origin master")
+        f.write(f"{datetime.datetime.now()} - Daily log\n")
 
-if not os.path.isdir(".git"):
-    setup_git()
+    # Commit and push
+    subprocess.run(["git", "add", "log.txt"])
+    subprocess.run(["git", "commit", "-m", "Daily update"])
+    subprocess.run(["git", "push", "origin", BRANCH])
 
-while True:
+if __name__ == "__main__":
     make_commit()
-    print("Committed successfully, sleeping for 1 hour...")
-    time.sleep(3600)
