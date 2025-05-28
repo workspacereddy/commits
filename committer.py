@@ -9,6 +9,9 @@ REPO_DIR = "./repo"
 def clone_repo():
     print(f"Current working directory: {os.getcwd()}")
     print(f"Directory listing before clone: {os.listdir('.')}")
+    if os.path.exists(REPO_DIR):
+        print(f"Is '{REPO_DIR}' a directory? {os.path.isdir(REPO_DIR)}")
+        print(f"Is '{REPO_DIR}' a file? {os.path.isfile(REPO_DIR)}")
     if not os.path.exists(REPO_DIR):
         print("Cloning repo...")
         ret = os.system(f"git clone https://{GITHUB_TOKEN}@github.com/{GITHUB_REPO}.git {REPO_DIR}")
